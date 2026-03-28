@@ -95,8 +95,8 @@ h3 { font-size: 1.25rem; }
     font-weight: 700;
     margin-bottom: var(--spacing-sm);
     letter-spacing: -0.02em;
-    opacity: 0;
-    transform: translateY(20px);
+    opacity: 1; /* 默认可见，由JS动画控制 */
+    transform: translateY(0);
 }
 
 .hero-subtitle {
@@ -106,8 +106,8 @@ h3 { font-size: 1.25rem; }
     font-weight: 400;
     max-width: 600px;
     margin: 0 auto;
-    opacity: 0;
-    transform: translateY(20px);
+    opacity: 1; /* 默认可见，由JS动画控制 */
+    transform: translateY(0);
 }
 
 .hero-canvas {
@@ -115,7 +115,7 @@ h3 { font-size: 1.25rem; }
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    opacity: 0;
+    opacity: 0.6; /* 默认半透明，由JS动画控制 */
 }
 
 /* ===== Main Content ===== */
@@ -219,13 +219,34 @@ h3 { font-size: 1.25rem; }
     cursor: pointer;
     box-shadow: var(--shadow-sm);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    opacity: 0;
-    transform: translateY(40px);
+    opacity: 1; /* 默认可见，由JS动画控制进入动画 */
+    transform: translateY(0);
 }
 
 .work-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-md);
+}
+
+/* 简单的淡入动画作为降级方案 */
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-title,
+.hero-subtitle {
+    animation: fadeSlideUp 0.6s ease-out forwards;
+}
+
+.hero-subtitle {
+    animation-delay: 0.2s;
 }
 
 .work-preview {

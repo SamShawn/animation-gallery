@@ -311,18 +311,18 @@ function animate() {
 function runPageLoadAnimation() {
     const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
 
-    // Hero title fades in
+    // Hero title fades in and slides up
     tl.to('.hero-title', {
         opacity: 1,
-        y: 0,
+        yPercent: -50,
         duration: 0.8,
         delay: 0.2
     });
 
-    // Subtitle fades in
+    // Subtitle fades in and slides up
     tl.to('.hero-subtitle', {
         opacity: 1,
-        y: 0,
+        yPercent: -50,
         duration: 0.6,
         delay: 0.1
     }, '-=0.4');
@@ -337,7 +337,7 @@ function runPageLoadAnimation() {
     // Start cards revealing
     gsap.to('.work-card', {
         opacity: 1,
-        y: 0,
+        y: -40,
         duration: 0.6,
         stagger: 0.1,
         ease: 'power2.out',
@@ -356,17 +356,23 @@ function setupScrollAnimations() {
         gsap.registerPlugin(ScrollTrigger);
     }
 
-    const cards = document.querySelectorAll('.work-card');
+    // Wait for cards to be rendered
+    setTimeout(() => {
+        const cards = document.querySelectorAll('.work-card');
 
-    cards.forEach(card => {
-        gsap.to(card, {
-            scrollTrigger: {
-                trigger: card,
-                start: 'top 85%',
-                toggleActions: 'play none none reverse'
-            }
+        cards.forEach(card => {
+            gsap.fromTo(card,
+                { opacity: 0, y: 40 },
+                { opacity: 1, y: 0,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
+                    }
+                }
+            );
         });
-    });
+    }, 100);
 }
 
 // ===== Initialize Everything =====
