@@ -44,19 +44,21 @@ function openModal(workIndex) {
                 frame.src = work.file;
                 frame.style.display = 'block';
                 frame.style.opacity = '0';
+                frame.style.width = '100%';
+                frame.style.height = '100%';
 
-                // Fade in animation
-                gsap.to(frame, {
-                    opacity: 1,
-                    duration: 0.3,
-                    delay: 0.2
-                });
-
-                // Remove loading state
+                // Wait for iframe to load then fade in
                 setTimeout(() => {
                     const loading = modalContent.querySelector('.modal-loading');
                     if (loading) loading.remove();
-                }, 500);
+
+                    // Fade in animation
+                    gsap.to(frame, {
+                        opacity: 1,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                }, 600);
             }
         }
     });

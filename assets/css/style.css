@@ -355,12 +355,13 @@ h3 { font-size: 1.25rem; }
     position: relative;
     max-width: 1200px;
     width: 100%;
-    max-height: 90vh;
+    max-height: 95vh;
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md);
     transform: scale(0.95);
     transition: transform 0.4s ease;
+    align-items: center;
 }
 
 .modal-overlay.active .modal-container {
@@ -427,7 +428,11 @@ h3 { font-size: 1.25rem; }
 .modal-content-wrapper {
     flex: 1;
     position: relative;
-    min-height: 50vh;
+    min-height: 60vh;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    padding: 0;
 }
 
 .modal-glow {
@@ -437,16 +442,18 @@ h3 { font-size: 1.25rem; }
     pointer-events: none;
     filter: blur(40px);
     opacity: 0;
+    z-index: -1;
 }
 
 .modal-content {
     width: 100%;
     height: 100%;
+    flex: 1;
     min-height: 400px;
     background: white;
     border-radius: 12px;
     border: 2px solid var(--border);
-    overflow: hidden;
+    overflow: visible;
     box-shadow: var(--shadow-lg);
     position: relative;
 }
@@ -454,12 +461,15 @@ h3 { font-size: 1.25rem; }
 #animationFrame {
     width: 100%;
     height: 100%;
+    min-height: 100%;
     border: none;
+    display: block;
 }
 
 .modal-info {
     text-align: center;
     padding: var(--spacing-sm);
+    flex-shrink: 0;
 }
 
 .modal-title {
@@ -541,15 +551,23 @@ h3 { font-size: 1.25rem; }
     }
 
     .modal-overlay {
-        padding: var(--spacing-sm);
+        padding: var(--spacing-xs);
+    }
+
+    .modal-container {
+        max-height: 100vh;
     }
 
     .modal-controls {
         display: none;
     }
 
+    .modal-content-wrapper {
+        min-height: 70vh;
+    }
+
     .modal-content {
-        min-height: 35vh;
+        min-height: 70vh;
     }
 }
 
@@ -572,5 +590,9 @@ h3 { font-size: 1.25rem; }
 
     .modal-description {
         font-size: 0.9rem;
+    }
+
+    #animationFrame {
+        min-height: 80vh;
     }
 }
