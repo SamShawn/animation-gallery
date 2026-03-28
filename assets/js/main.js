@@ -137,9 +137,15 @@ function renderSearch() {
     main.insertBefore(searchContainer, document.getElementById('worksGrid'));
 }
 
-// ===== 打开作品 =====
+// ===== Open Work with Modal Viewer =====
 function openWork(file) {
-    window.open(file, '_blank');
+    const index = works.findIndex(w => w.file === file);
+    if (index !== -1 && window.viewerAPI) {
+        window.viewerAPI.openModal(index);
+    } else {
+        // Fallback for external files
+        window.open(file, '_blank');
+    }
 }
 
 // ===== 键盘快捷键 =====
@@ -167,10 +173,216 @@ function setupKeyboardShortcuts() {
     });
 }
 
-// ===== 页面加载时初始化 =====
+// ===== Three.js Cinematic Hero =====
+let scene, camera, renderer;
+let floatingElements = [];
+let mouseX = 0, mouseY = 0;
+let targetMouseX = 0, targetMouseY = 0;
+
+function initThreeHero() {
+    const container = document.getElementById('heroCanvas');
+    if (!container) return;
+
+    // Scene
+    scene = new THREE.Scene();
+
+    // Camera - Orthographic for cinematic feel
+    const aspect = container.clientWidth / container.clientHeight;
+    camera = new THREE.OrthographicCamera(
+        -aspect * 10, aspect * 10,
+        10, -10,
+        1, 100
+    );
+    camera.position.z = 10;
+
+    // Renderer
+    renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true
+    });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    // Lighting - Warm tones
+    const ambientLight = new THREE.AmbientLight(0xfff5e6, 0.6);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffd700, 0.8);
+    directionalLight.position.set(5, 5, 5);
+    scene.add(directionalLight);
+
+    // Create floating geometric elements
+    createFloatingElements();
+
+    // Mouse tracking
+    document.addEventListener('mousemove', onMouseMove);
+
+    // Start animation loop
+    animate();
+
+    // Handle resize
+    window.addEventListener('resize', onResize);
+}
+
+function createFloatingElements() {
+    const geometries = [
+        new THREE.SphereGeometry(0.8, 8, 8),
+        new THREE.IcosahedronGeometry(0.6),
+        new THREE.OctahedronGeometry(0.7),
+        new THREE.TorusGeometry(0.5, 0.2, 8, 8),
+    ];
+
+    const warmColors = [0xc8795f, 0xdca076, 0xffe8d0, 0xffb363];
+
+    for (let i = 0; i < 12; i++) {
+        const geometry = geometries[i % geometries.length];
+        const material = new THREE.MeshLambertMaterial({
+            color: warmColors[i % warmColors.length],
+            wireframe: false,
+            transparent: true,
+            opacity: 0.7
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+
+        // Position at varying depths
+        mesh.position.x = (Math.random() - 0.5) * 20;
+        mesh.position.y = (Math.random() - 0.5) * 10;
+        mesh.position.z = (Math.random() - 0.5) * 5;
+
+        // Random rotation speed
+        mesh.userData = {
+            rotationSpeed: {
+                x: (Math.random() - 0.5) * 0.01,
+                y: (Math.random() - 0.5) * 0.01,
+                z: (Math.random() - 0.5) * 0.01
+            },
+            parallaxFactor: 0.5 + Math.random() * 0.5
+        };
+
+        scene.add(mesh);
+        floatingElements.push(mesh);
+    }
+}
+
+function onMouseMove(e) {
+    targetMouseX = (e.clientX / window.innerWidth) * 2 - 1;
+    targetMouseY = (e.clientY / window.innerHeight) * 2 - 1;
+}
+
+function onResize() {
+    const container = document.getElementById('heroCanvas');
+    if (!container || !camera || !renderer) return;
+
+    const aspect = container.clientWidth / container.clientHeight;
+    camera.left = -aspect * 10;
+    camera.right = aspect * 10;
+    camera.top = 10;
+    camera.bottom = -10;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(container.clientWidth, container.clientHeight);
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+
+    // Smooth mouse movement
+    mouseX += (targetMouseX - mouseX) * 0.05;
+    mouseY += (targetMouseY - mouseY) * 0.05;
+
+    // Rotate and parallax floating elements
+    floatingElements.forEach((mesh, i) => {
+        mesh.rotation.x += mesh.userData.rotationSpeed.x;
+        mesh.rotation.y += mesh.userData.rotationSpeed.y;
+        mesh.rotation.z += mesh.userData.rotationSpeed.z;
+
+        // Parallax based on mouse
+        const parallax = mesh.userData.parallaxFactor;
+        mesh.position.x += (mouseX * parallax * 0.1 - mesh.position.x * 0.001);
+        mesh.position.y += (-mouseY * parallax * 0.1 - mesh.position.y) * 0.001;
+    });
+
+    renderer.render(scene, camera);
+}
+
+// ===== GSAP Page Load Animation =====
+function runPageLoadAnimation() {
+    const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+
+    // Hero title fades in
+    tl.to('.hero-title', {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay: 0.2
+    });
+
+    // Subtitle fades in
+    tl.to('.hero-subtitle', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        delay: 0.1
+    }, '-=0.4');
+
+    // 3D canvas fades in
+    tl.to('.hero-canvas', {
+        opacity: 1,
+        duration: 0.8,
+        delay: 0.2
+    }, '-=0.2');
+
+    // Start cards revealing
+    gsap.to('.work-card', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power2.out',
+        scrollTrigger: {
+            trigger: '.works-grid',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+        }
+    });
+}
+
+// ===== Scroll-Triggered Card Animations =====
+function setupScrollAnimations() {
+    // Register ScrollTrigger plugin
+    if (gsap.ScrollTrigger) {
+        gsap.registerPlugin(ScrollTrigger);
+    }
+
+    const cards = document.querySelectorAll('.work-card');
+
+    cards.forEach(card => {
+        gsap.to(card, {
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+    });
+}
+
+// ===== Initialize Everything =====
 document.addEventListener('DOMContentLoaded', () => {
+    // Render UI
     renderWorks();
     renderTagFilters();
     renderSearch();
+
+    // Setup interactions
     setupKeyboardShortcuts();
+
+    // Initialize Three.js hero
+    initThreeHero();
+
+    // Run GSAP animations
+    runPageLoadAnimation();
+    setupScrollAnimations();
 });
