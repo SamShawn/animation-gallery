@@ -1,0 +1,90 @@
+.work-card {
+  background-color: var(--bg-card);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  border: 1px solid transparent;
+}
+
+.work-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-md), 0 0 30px rgba(0, 212, 255, 0.15);
+  border-color: var(--accent-primary);
+}
+
+.work-card:focus {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+.work-preview {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.work-preview::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 0, 170, 0.1));
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.work-card:hover .work-preview::before {
+  opacity: 1;
+}
+
+.work-preview-icon {
+  font-size: 3.5rem;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));
+  transition: transform var(--transition-normal);
+}
+
+.work-card:hover .work-preview-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.work-info {
+  padding: var(--spacing-md);
+}
+
+.work-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+  color: var(--text-primary);
+}
+
+.work-description {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-height: 3em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.work-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(255, 0, 170, 0.15));
+  color: var(--accent-primary);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: var(--spacing-sm);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+}

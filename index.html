@@ -1,69 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Animation Gallery - Premium Showcase">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Animation Gallery - Premium Creative Pixel Animations Showcase" />
     <title>Animation Gallery</title>
-
-    <!-- CDN Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body>
-    <!-- Hero Section with 3D Canvas -->
-    <header class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Animation Gallery</h1>
-            <p class="hero-subtitle">A curated collection of creative pixel animations</p>
-        </div>
-        <div class="hero-canvas" id="heroCanvas"></div>
-    </header>
-
-    <!-- Works Grid Section -->
-    <main class="main">
-        <div class="container">
-            <div class="works-grid" id="worksGrid">
-                <!-- 作品卡片将通过 JavaScript 动态生成 -->
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p class="copyright">&copy; 2026 Animation Gallery. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <!-- Modal Viewer Overlay -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-container">
-            <button class="modal-close" id="modalClose">&times;</button>
-            <div class="modal-controls">
-                <button class="modal-nav modal-prev" id="modalPrev">&larr;</button>
-                <button class="modal-nav modal-next" id="modalNext">&rarr;</button>
-            </div>
-            <div class="modal-content-wrapper">
-                <div class="modal-glow"></div>
-                <div class="modal-content" id="modalContent">
-                    <iframe id="animationFrame" sandbox="allow-scripts allow-same-origin"></iframe>
-                </div>
-            </div>
-            <div class="modal-info">
-                <h2 class="modal-title" id="modalTitle"></h2>
-                <p class="modal-description" id="modalDescription"></p>
-            </div>
-        </div>
-    </div>
-
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/viewer.js"></script>
-</body>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
